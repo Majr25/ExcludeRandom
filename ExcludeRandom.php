@@ -36,7 +36,7 @@ $dir = dirname( __FILE__ ) . '/';
 $wgExtensionMessagesFiles['ExcludeRandom'] = $dir . 'ExcludeRandom.i18n.php';
 
 function wfExcludeRandomInit( &$rand, &$isRedir, &$namespaces, &$extra, &$title ) {
-	GLOBAL $wgExcludeRandomPages, $dbr;
+	GLOBAL $wgExcludeRandomPages;
 	if ( !$wgExcludeRandomPages ) {
 		return true;
 	}
