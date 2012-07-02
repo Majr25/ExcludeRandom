@@ -9,7 +9,7 @@
  * @author Matt Russell
  * @version 0.1
  * @link https://www.mediawiki.org/wiki/Extension:ExcludeRandom Documentation
- * @license CopyLeft
+ * @license BSD
  */
 
 if ( !defined( 'MEDIAWIKI' ) ) {
