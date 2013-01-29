@@ -17,8 +17,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
         die( -1 );
 }
 
-$wgExcludeRandomPages = null;
-
 $wgHooks['SpecialRandomGetRandomTitle'][] = 'wfExcludeRandomInit';
 
 /* Define extensions info */
@@ -37,14 +35,15 @@ $wgExtensionMessagesFiles['ExcludeRandom'] = $dir . 'ExcludeRandom.i18n.php';
 
 function wfExcludeRandomInit( &$rand, &$isRedir, &$namespaces, &$extra, &$title ) {
 	global $wgExcludeRandomPages;
+	$DB = wfGetDB(DB_MASTER);
 	if (!$wgExcludeRandomPages) {
 		return true;
 	}
 	
 	foreach ($wgExcludeRandomPages AS $cond) {
-		$extra[] = "`page_title` NOT LIKE '".wfStrencode($cond)."'";
+		$extra[] = "`page_title` NOT LIKE '".$DB->strencode($cond)."'";
 	}
-	
+
 	return true;
 }
 ?>
