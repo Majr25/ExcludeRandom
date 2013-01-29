@@ -17,8 +17,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
         die( -1 );
 }
 
-$wgExcludeRandomPages = null;
-
 $wgHooks['SpecialRandomGetRandomTitle'][] = 'wfExcludeRandomInit';
 
 /* Define extensions info */
@@ -36,15 +34,16 @@ $dir = dirname( __FILE__ ) . '/';
 $wgExtensionMessagesFiles['ExcludeRandom'] = $dir . 'ExcludeRandom.i18n.php';
 
 function wfExcludeRandomInit( &$rand, &$isRedir, &$namespaces, &$extra, &$title ) {
-	GLOBAL $wgExcludeRandomPages;
-	if ( !$wgExcludeRandomPages ) {
+	global $wgExcludeRandomPages;
+	$DB = wfGetDB(DB_MASTER);
+	if (!$wgExcludeRandomPages) {
 		return true;
 	}
 	
-	foreach ( $wgExcludeRandomPages AS $cond ) {
-		$escape = str_replace( array( ' ', '\\', '%', '_', '*', '\'' ), array( '_', '\\\\', '\%', '\_', '%', '\\\'' ), $cond );
-		$extra[] = "`page_title` NOT LIKE '$escape'";
+	foreach ($wgExcludeRandomPages AS $cond) {
+		$extra[] = "`page_title` NOT LIKE '".$DB->strencode($cond)."'";
 	}
-	
+
 	return true;
 }
+?>
