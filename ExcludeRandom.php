@@ -35,15 +35,17 @@ $wgExtensionMessagesFiles['ExcludeRandom'] = $dir . 'ExcludeRandom.i18n.php';
 
 function wfExcludeRandomInit( &$rand, &$isRedir, &$namespaces, &$extra, &$title ) {
 	global $wgExcludeRandomPages;
-	$DB = wfGetDB(DB_MASTER);
 	if (!$wgExcludeRandomPages) {
 		return true;
 	}
-	
+
+	$DB = wfGetDB(DB_MASTER);
 	foreach ($wgExcludeRandomPages AS $cond) {
-		$extra[] = "`page_title` NOT LIKE '".$DB->strencode($cond)."'";
+		$pattern = $DB->strencode($cond);
+		$pattern = str_replace( array(' ', '*',  '%'),
+		                        array('_', '%', '\%'), $pattern);
+		$extra[] = "`page_title` NOT LIKE '$pattern'";
 	}
 
 	return true;
 }
-?>
