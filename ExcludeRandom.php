@@ -39,11 +39,11 @@ function wfExcludeRandomInit( &$rand, &$isRedir, &$namespaces, &$extra, &$title 
 		return true;
 	}
 
-	$DB = wfGetDB(DB_MASTER);
+	$DB = wfGetDB(DB_SLAVE);
 	foreach ($wgExcludeRandomPages AS $cond) {
 		$pattern = $DB->strencode($cond);
-		$pattern = str_replace( array(' ', '*',  '%'),
-		                        array('_', '%', '\%'), $pattern);
+		$pattern = str_replace( array( '_', '%', ' ', '*' ),
+		                        array( '\_', '\%', '\_', '%' ), $pattern);
 		$extra[] = "`page_title` NOT LIKE '$pattern'";
 	}
 
