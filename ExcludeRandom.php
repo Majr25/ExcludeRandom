@@ -3,7 +3,7 @@
  * ExcludeRandom - this extension allows pages to be excluded from Special:Random
  *
  * To activate this extension, add the following into your LocalSettings.php file:
- * require_once( '$IP/extensions/ExcludeRandom/ExcludeRandom.php' );
+ * require_once "$IP/extensions/ExcludeRandom/ExcludeRandom.php";
  *
  * @ingroup Extensions
  * @author Matt Russell
@@ -12,40 +12,40 @@
  * @license BSD
  */
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-        echo "This is an extension to the MediaWiki package and cannot be run standalone.\n";
-        die( -1 );
+if( !defined( 'MEDIAWIKI' ) ) {
+	die();
 }
 
-$wgHooks['SpecialRandomGetRandomTitle'][] = 'wfExcludeRandomInit';
-
-/* Define extensions info */
+// Define extensions info
 $wgExtensionCredits['other'][] = array(
-		'path' => __FILE__,
-		'name' => 'ExcludeRandom',
-		'author' =>'[http://matt-russell.com Matt Russell]',
-		'url' => 'https://www.mediawiki.org/wiki/Extension:ExcludeRandom',
-		'descriptionmsg' => 'excluderandom-desc',
-		'version'  => 0.1,
-		);
+	'path' => __FILE__,
+	'name' => 'ExcludeRandom',
+	'author' => array( 'Matt Russell', '...' ),
+	'url' => 'https://www.mediawiki.org/wiki/Extension:ExcludeRandom',
+	'descriptionmsg' => 'excluderandom-desc',
+	'version' => 1,
+);
 
-/* Define internationalisation file */
-$dir = dirname( __FILE__ ) . '/';
-$wgExtensionMessagesFiles['ExcludeRandom'] = $dir . 'ExcludeRandom.i18n.php';
+// Define internationalisation file
+$wgExtensionMessagesFiles['ExcludeRandom'] = dirname( __FILE__ ) . '/ExcludeRandom.i18n.php';
 
+$wgHooks['SpecialRandomGetRandomTitle'][] = 'wfExcludeRandomInit';
 function wfExcludeRandomInit( &$rand, &$isRedir, &$namespaces, &$extra, &$title ) {
 	global $wgExcludeRandomPages;
-	if (!$wgExcludeRandomPages) {
+	if ( !$wgExcludeRandomPages ) {
 		return true;
 	}
-
-	$DB = wfGetDB(DB_SLAVE);
-	foreach ($wgExcludeRandomPages AS $cond) {
-		$pattern = $DB->strencode($cond);
-		$pattern = str_replace( array( '_', '%', ' ', '*' ),
-		                        array( '\_', '\%', '\_', '%' ), $pattern);
+	
+	$db = wfGetDB( DB_SLAVE );
+	foreach ( $wgExcludeRandomPages AS $cond ) {
+		$pattern = $db->strencode( $cond );
+		$pattern = str_replace(
+			array( '_', '%', ' ', '*' ),
+			array( '\_', '\%', '\_', '%' ),
+			$pattern
+		);
 		$extra[] = "`page_title` NOT LIKE '$pattern'";
 	}
-
+	
 	return true;
 }
