@@ -1,0 +1,31 @@
+{
+	"name": "ExcludeRandom",
+	"version": "2.0.0",
+	"license-name": "BSD-3-Clause",
+	"author": [
+		"Matt Russell"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:ExcludeRandom",
+	"descriptionmsg": "excluderandom-desc",
+	"type": "other",
+	"MessagesDirs": {
+		"ExcludeRandomHooks": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"ExcludeRandomHooks": "ExcludeRandomHooks.php"
+	},
+	"Hooks": {
+		"SpecialRandomGetRandomTitle": "ExcludeRandomHooks::onSpecialRandomGetRandomTitle"
+	},
+	"config": {
+		"ExcludeRandomPages": {
+			"value": [],
+			"path": false,
+			"descriptionmsg": "excluderandom-config-excluderandompages",
+			"public": false
+		}
+	},
+	"manifest_version": 2
+}

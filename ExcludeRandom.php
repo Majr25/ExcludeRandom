@@ -7,45 +7,20 @@
  *
  * @ingroup Extensions
  * @author Matt Russell
- * @version 0.1
+ * @version 2.0.0
  * @link https://www.mediawiki.org/wiki/Extension:ExcludeRandom Documentation
- * @license BSD
+ * @license BSD-3-Clause
  */
 
-if( !defined( 'MEDIAWIKI' ) ) {
-	die();
-}
-
-// Define extensions info
-$wgExtensionCredits['other'][] = array(
-	'path' => __FILE__,
-	'name' => 'ExcludeRandom',
-	'author' => array( 'Matt Russell', '...' ),
-	'url' => 'https://www.mediawiki.org/wiki/Extension:ExcludeRandom',
-	'descriptionmsg' => 'excluderandom-desc',
-	'version' => 1,
-);
-
-// Define internationalisation file
-$wgExtensionMessagesFiles['ExcludeRandom'] = dirname( __FILE__ ) . '/ExcludeRandom.i18n.php';
-
-$wgHooks['SpecialRandomGetRandomTitle'][] = 'wfExcludeRandomInit';
-function wfExcludeRandomInit( &$rand, &$isRedir, &$namespaces, &$extra, &$title ) {
-	global $wgExcludeRandomPages;
-	if ( !$wgExcludeRandomPages ) {
-		return true;
-	}
-	
-	$db = wfGetDB( DB_SLAVE );
-	foreach ( $wgExcludeRandomPages AS $cond ) {
-		$pattern = $db->strencode( $cond );
-		$pattern = str_replace(
-			array( '_', '%', ' ', '*' ),
-			array( '\_', '\%', '\_', '%' ),
-			$pattern
-		);
-		$extra[] = "`page_title` NOT LIKE '$pattern'";
-	}
-	
-	return true;
+if ( function_exists( 'wfLoadExtension' ) ) {
+	wfLoadExtension( 'ExcludeRandom' );
+	// Keep i18n globals so mergeMessageFileList.php doesn't break
+	$wgMessagesDirs['ExcludeRandom'] = __DIR__ . '/i18n';
+	wfWarn(
+		'Deprecated PHP entry point used for ExcludeRandom extension. Please use wfLoadExtension instead, ' .
+		'see https://www.mediawiki.org/wiki/Extension_registration for more details.'
+	);
+	return;
+} else {
+	die( 'This version of the ExcludeRandom extension requires MediaWiki 1.25+' );
 }
